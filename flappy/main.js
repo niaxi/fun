@@ -26,10 +26,20 @@ var mainState = {
     spaceKey.onDown.add(this.jump, this);
     
     game.input.onTap.add(this.jump, this);
+
+    // gamepad support
+    game.input.gamepad.start();
+    this.pad = game.input.gamepad.pad1;
+    this.pad.addCallbacks(this, { onConnect: mapGamepadButtons });
     
     this.timer = game.time.events.loop(1500, this.addRowOfPipes, this);
   },
   
+  mapGamepadButtons: function() {
+    var buttonA = pad.getButton(Phaser.Gamepad.XBOX360_A);
+    buttonA.onDown.add(this.jump, this);
+  },
+
   update: function() {
     // if we want the bird to "visibly" hit the pipes
     // game.physics.arcade.collide(this.bird, this.pipes);
