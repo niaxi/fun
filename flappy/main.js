@@ -36,7 +36,7 @@ var mainState = {
     
     game.physics.arcade.overlap(
       this.bird, this.pipes, this.restartGame, null, this);
-    if (game.input.mousePointer.isDown) { console.log("Mouse X when you clicked was: "+game.input.mousePointer.x); }
+
     if(this.bird.y < 0 || this.bird.y > 490) {
       this.restartGame();
     }
