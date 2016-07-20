@@ -30,14 +30,14 @@ var mainState = {
     // gamepad support
     game.input.gamepad.start();
     this.pad = game.input.gamepad.pad1;
-    this.pad.addCallbacks(this, { onConnect: mapGamepadButtons });
+    this.pad.addCallbacks(this, { onConnect: this.mapGamepadButtons });
     
     this.timer = game.time.events.loop(1500, this.addRowOfPipes, this);
   },
   
   mapGamepadButtons: function() {
     var buttonA = pad.getButton(Phaser.Gamepad.XBOX360_A);
-    buttonA.onDown.add(this.jump, this);
+    buttonA.onDown.add(mainState.jump, mainState);
   },
 
   update: function() {
