@@ -1,0 +1,77 @@
+var mainState = {
+  preload: function() {
+    game.load.image('bird', 'assets/bird.png');
+    game.load.image('pipe', 'assets/pipe.png');
+  },
+  
+  create: function() {
+    var bird = this.bird = game.add.sprite(0, 0, 'bird');
+    var pipes = this.pipes = game.add.group();
+    
+    game.stage.backgroundColor = '#71c5cf';
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+    game.physics.arcade.enable(bird);
+    
+    bird.body.gravity.y = 500;
+    // only if we want the bird to hit top and bottom
+    // bird.body.collideWorldBounds = true;
+    
+    spaceKey = game.input.keyboard.addKey(
+      Phaser.Keyboard.SPACEBAR);
+      
+    spaceKey.onDown.add(this.jump, this);
+    
+    game.input.onTap.add(this.jump, this);
+    
+    this.timer = game.time.events.loop(1500, this.addRowOfPipes, this);
+  },
+  
+  update: function() {
+    // if we want the bird to "visibly" hit the pipes
+    // game.physics.arcade.collide(this.bird, this.pipes);
+    
+    game.physics.arcade.overlap(
+      this.bird, this.pipes, this.restartGame, null, this);
+    if (game.input.mousePointer.isDown) { console.log("Mouse X when you clicked was: "+game.input.mousePointer.x); }
+    if(this.bird.y < 0 || this.bird.y > 490) {
+      this.restartGame();
+    }
+  },
+  
+  jump: function() {
+    this.bird.body.velocity.y = -300;
+  },
+  
+  restartGame: function() {
+    game.state.start('main');
+  },
+  
+  addOnePipe: function(x, y) {
+    var pipe = game.add.sprite(x, y, 'pipe');
+    this.pipes.add(pipe);
+    game.physics.arcade.enable(pipe);
+    
+    // velocity to make pipe move left
+    pipe.body.velocity.x = -200;
+    
+    // auto kill pipe when no longer visible
+    pipe.checkWorldBounds = true;
+    pipe.outOfBoundsKill = true;
+  },
+  
+  addRowOfPipes: function() {
+    var hole = Math.floor(Math.random() * 5) + 1;
+    
+    for (var i=0; i<8; i++) {
+      if (i != hole && i != hole + 1) {
+        this.addOnePipe(400, i * 60 + 10);
+      }
+    }
+  }
+};
+
+var game = new Phaser.Game(400, 490);
+
+game.state.add('main', mainState);
+
+game.state.start('main');
