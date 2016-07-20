@@ -7,7 +7,7 @@ var mainState = {
   create: function() {
     this.score = 0;
 
-    var bird = this.bird = game.add.sprite(0, 0, 'bird');
+    var bird = this.bird = game.add.sprite(100, 245, 'bird');
     var pipes = this.pipes = game.add.group();
     this.labelScore = game.add.text(20, 20, "0",
       { font: "30px Arial", fill: "#ffffff" });
