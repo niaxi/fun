@@ -36,7 +36,7 @@ var mainState = {
   },
   
   mapGamepadButtons: function() {
-    var buttonA = pad.getButton(Phaser.Gamepad.XBOX360_A);
+    var buttonA = this.pad.getButton(Phaser.Gamepad.XBOX360_A);
     buttonA.onDown.add(mainState.jump, mainState);
   },
 
