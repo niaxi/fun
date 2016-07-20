@@ -5,8 +5,12 @@ var mainState = {
   },
   
   create: function() {
+    this.score = 0;
+
     var bird = this.bird = game.add.sprite(0, 0, 'bird');
     var pipes = this.pipes = game.add.group();
+    this.labelScore = game.add.text(20, 20, "0",
+      { font: "30px Arial", fill: "#ffffff" });
     
     game.stage.backgroundColor = '#71c5cf';
     game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -60,6 +64,9 @@ var mainState = {
   },
   
   addRowOfPipes: function() {
+    this.score += 1;
+    this.labelScore.text = this.score;
+    
     var hole = Math.floor(Math.random() * 5) + 1;
     
     for (var i=0; i<8; i++) {
