@@ -16,7 +16,7 @@ var mainState = {
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.physics.arcade.enable(bird);
     
-    bird.body.gravity.y = 500;
+    bird.body.gravity.y = 1000;
     // only if we want the bird to hit top and bottom
     // bird.body.collideWorldBounds = true;
     
@@ -43,7 +43,7 @@ var mainState = {
   },
   
   jump: function() {
-    this.bird.body.velocity.y = -300;
+    this.bird.body.velocity.y = -350;
   },
   
   restartGame: function() {
