@@ -1,5 +1,6 @@
 namespace('flappy');
 
+
 flappy.main = (function() {
   var env = {
     width: 400,
@@ -17,7 +18,7 @@ flappy.main = (function() {
   }
 
   function create() {
-    game.state.add('level1State', flappy.level1.state(game, store));
+    game.state.add('level1State', flappy.level1.state(game, store, env));
     game.state.start('level1State');
   }
 

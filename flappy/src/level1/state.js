@@ -1,12 +1,17 @@
 namespace('flappy.level1');
 
 
-flappy.level1.state = function(game, store) {
+flappy.level1.state = function(game, store, env) {
   var scene;
-  var actions;
   var keyboardInput;
+  var touchInput;
 
-  var updateScore;
+  // objects
+  var score;
+  var bird;
+
+  var mechanics;
+
   var pipeSpawnTimer;
 
   // life cycle
@@ -14,49 +19,52 @@ flappy.level1.state = function(game, store) {
     game.load.image('bird', 'assets/bird.png');
     game.load.image('pipe', 'assets/pipe.png');
     
-    game.load.script('actions', 'src/actions.js');
-    game.load.script('events', 'src/events.js');
+    game.load.script('mechanics', 'src/mechanics.js');
+    game.load.script('commands', 'src/commands.js');
     game.load.script('keyboardInput', 'src/inputs/keyboard.js');
     game.load.script('touchInput', 'src/inputs/touch.js');
+
     game.load.script('level1Scene', 'src/level1/scene.js');
-    game.load.script('level1Rules', 'src/level1/rules.js');
+    game.load.script('level1Gameplay', 'src/level1/gameplay.js');
+    
+    game.load.script('bird', 'src/objects/bird.js');
+    game.load.script('score', 'src/objects/score.js');
+    
   }
 
   function create() {
     // imports
+    mechanics = flappy.mechanics();
     keyboardInput = flappy.inputs.keyboard(game);
     touchInput = flappy.inputs.touch(game);
     scene = flappy.level1.scene(game);
-    rules = flappy.level1.rules(game, scene);
-    actions = flappy.actions;
 
-
-    // setup
+    // initialize
     store.score = 0;
-    updateScore = actions.getTextUpdater(scene.score);
+    score = flappy.objects.score(game, scene.score);
+    bird = flappy.objects.bird(game, scene.bird);
 
-
-    // bird = birdController(scene.bird);
-    // rules.whenBirdIsOutOfBounds(restart);
-    // rules.whenBirdHitsPipe(restart);
-
-
-    // rules
-    rules.whenBirdHitsPipe(restart);
-
-    // scene.bird.events.onKilled.add(restart);
-    // events.whenBirdHitsGround(scene.bird, );
-    // events.whenBirdDies(restart);
-
+    // setup rules for mechanics
+    var when = flappy.level1.gameplay(game, scene, env).when;
+    var gameBounds = {
+      top: 0,
+      bottom: env.height
+    };
+    mechanics
+      .addRule(when(bird.sprite).hits(scene.pipes), restart)
+      .addRule(when(bird.sprite).isOutOfBounds(gameBounds), restart);
 
     // controls
-    keyboardInput.spaceKeyDown(jump);
-    keyboardInput.escKeyDown(pause);
-    touchInput.tap(jump);
+    keyboardInput
+      .spaceKeyDown(bird.jump)
+      .escKeyDown(pause);
 
+    touchInput.tap(bird.jump);
 
     // start
-    actions.applyGravity(scene.bird, 1000);
+    bird.fall();
+
+    
     pipeSpawnTimer = game.time.events.loop(1500, function() {
       scene.spawnRowOfPipes();
       store.score += 1;
@@ -64,24 +72,15 @@ flappy.level1.state = function(game, store) {
   }
 
   function update() {
-    rules.whenBirdHitsPipe(restart);
-    
-    // game.physics.arcade.overlap(
-    //   scene.bird, scene.pipes, restart, null, this);
+    mechanics.enforce();
 
     if (scene.bird.angle < 20) {
       scene.bird.angle += 1;
     }
-    // birdConstraint.check();
-    updateScore(store.score);
+    
+    score.update(store.score);
   }
 
-
-
-  function jump(){
-    game.add.tween(scene.bird).to({angle:-20}, 100).start();
-    return actions.moveY(scene.bird, -350);
-  }
 
   function pause() {
     console.log('Game paused');
@@ -100,28 +99,3 @@ flappy.level1.state = function(game, store) {
     restart: restart
   };
 };
-
-
-/*
-var spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-
-function whenSpaceKeyPressed(cb) {
-  spaceKey.onDown.add(cb);
-}
-
-
-
-
-whenSpaceKeyPressed(jump);
-whenGamepadAPressed(jump);
-
-
-function jump() {
-  bird.body.velocity.y = -350;
-}
-
-function whenCollide(a, b, cb) {
-  game.physics.arcade.overlap(
-      a, b, cb, null, this);
-}
-*/
