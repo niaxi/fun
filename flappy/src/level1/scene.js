@@ -20,6 +20,8 @@ flappy.level1.scene = function(game, options) {
   game.physics.startSystem(Phaser.Physics.ARCADE);
   game.physics.arcade.enable(bird);
 
+  // only if we want the bird to hit top and bottom
+  // bird.body.collideWorldBounds = true;
 
   function createPipe(x, y) {
     var pipe = game.add.sprite(x, y, 'pipe');
