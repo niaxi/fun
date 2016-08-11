@@ -2,8 +2,6 @@ namespace('flappy.level1');
 
 
 flappy.level1.gameplay = function(game, scene, env) {
-  var mechanics = flappy.mechanics();
-
 
   function when(subject) {
 

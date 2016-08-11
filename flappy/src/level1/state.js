@@ -20,7 +20,6 @@ flappy.level1.state = function(game, store, env) {
     game.load.image('bird', 'assets/bird.png');
     game.load.image('pipe', 'assets/pipe.png');
     
-    game.load.script('mechanics', 'src/mechanics.js');
     game.load.script('keyboardInput', 'src/inputs/keyboard.js');
     game.load.script('touchInput', 'src/inputs/touch.js');
 
@@ -32,19 +31,22 @@ flappy.level1.state = function(game, store, env) {
     game.load.script('Pipe', 'src/objects/Pipe.js');
     game.load.script('PipeGroup', 'src/objects/PipeGroup.js');
 
+    game.load.script('mechanics', 'src/engine/mechanics.js');
     game.load.script('pipeGenerator', 'src/engine/pipeGenerator.js');
   }
 
   function create() {
     // imports
-    mechanics = flappy.mechanics();
+    pipeGenerator = flappy.engine.pipeGenerator;
+    mechanics = flappy.engine.mechanics();
     keyboardInput = flappy.inputs.keyboard(game);
     touchInput = flappy.inputs.touch(game);
     scene = flappy.level1.scene(game);
 
+
     // initialize
     store.score = 0;
-    pipeSpore = flappy.engine.pipeGenerator(game, Phaser.Timer.SECOND * 1.25);
+    pipeSpore = pipeGenerator(game, Phaser.Timer.SECOND * 1.25);
     bird = new flappy.objects.Bird(game, 100, 245);
     hud = new flappy.objects.Hud(game, store);
 
