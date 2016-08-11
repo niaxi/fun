@@ -21,7 +21,6 @@ flappy.level1.state = function(game, store, env) {
     game.load.image('pipe', 'assets/pipe.png');
     
     game.load.script('mechanics', 'src/mechanics.js');
-    game.load.script('commands', 'src/commands.js');
     game.load.script('keyboardInput', 'src/inputs/keyboard.js');
     game.load.script('touchInput', 'src/inputs/touch.js');
 
@@ -57,6 +56,11 @@ flappy.level1.state = function(game, store, env) {
       .addRule(when(bird).hitsAny(pipes), restart)
       .addRule(when(bird).isOutOfBounds(gameBounds), restart)
       .addRule(when(bird).clearsAny(pipes), scorePoint);
+
+    // mechanics
+    //   .when(playerHitsAPipe, restart)
+    //   .when(playerIsOutOfBounds(gameBounds), restart)
+    //   .when(playerClearsAPipeGroup, scorePoint);
 
     // controls
     keyboardInput

@@ -2,10 +2,6 @@ namespace('flappy.objects');
 
 
 flappy.objects.Bird = (function() {
-  // imports
-  var moveY = flappy.commands.moveY;
-  var applyGravity = flappy.commands.applyGravity;
-
 
   function Bird(game, x, y) {
     Phaser.Sprite.call(this, game, x, y, 'bird');
@@ -26,7 +22,7 @@ flappy.objects.Bird = (function() {
 
   Bird.prototype.jump = function() {
     this.game.add.tween(this).to({angle:-20}, 100).start();
-    return moveY(this, -350);
+    return this.body.velocity.y = -350;
   }
 
 

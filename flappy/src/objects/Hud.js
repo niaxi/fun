@@ -2,9 +2,6 @@ namespace('flappy.objects');
 
 
 flappy.objects.Hud = (function() {
-  // imports
-  var updateText = flappy.commands.updateText;
-
 
   function Hud(game, store) {
     Phaser.Group.call(this, game);
