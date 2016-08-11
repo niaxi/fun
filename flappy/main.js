@@ -14,12 +14,12 @@ flappy.main = (function() {
 
   // life cycle 
   function preload() {
-    game.load.script('level1State',   'src/level1/state.js');
+    game.load.script('play',   'src/states/play.js');
   }
 
   function create() {
-    game.state.add('level1State', flappy.level1.state(game, store, env));
-    game.state.start('level1State');
+    game.state.add('play', flappy.states.play(game, store, env));
+    game.state.start('play');
   }
 
 

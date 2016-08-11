@@ -1,7 +1,7 @@
-namespace('flappy.level1');
+namespace('flappy.states');
 
 
-flappy.level1.state = function(game, store, env) {
+flappy.states.play = function(game, store, env) {
   var scene;
   var keyboardInput;
   var touchInput;
@@ -91,7 +91,7 @@ flappy.level1.state = function(game, store, env) {
   }
 
   function restart() {
-    game.state.start('level1State');
+    game.state.start('play');
   }
 
   function scorePoint() {
