@@ -3,10 +3,6 @@ namespace('flappy');
 
 flappy.commands = (function() {
 
-  function updateText(obj, value) {
-    return obj.text = value;
-  }
-
   function applyGravity(obj, value) {
     return obj.body.gravity.y = value;
   }
@@ -22,7 +18,6 @@ flappy.commands = (function() {
 
   // exports
   return {
-    updateText: updateText,
     applyGravity: applyGravity,
     moveX: moveX,
     moveY: moveY

@@ -7,8 +7,9 @@ flappy.level1.state = function(game, store, env) {
   var touchInput;
 
   // objects
-  var score;
+  var hud;
   var bird;
+  var pipes;
 
   var mechanics;
 
@@ -27,9 +28,10 @@ flappy.level1.state = function(game, store, env) {
     game.load.script('level1Scene', 'src/level1/scene.js');
     game.load.script('level1Gameplay', 'src/level1/gameplay.js');
     
-    game.load.script('bird', 'src/objects/bird.js');
-    game.load.script('score', 'src/objects/score.js');
-    
+    game.load.script('Bird', 'src/objects/Bird.js');
+    game.load.script('Hud', 'src/objects/Hud.js');
+    game.load.script('Pipe', 'src/objects/Pipe.js');
+    game.load.script('PipeGroup', 'src/objects/PipeGroup.js');
   }
 
   function create() {
@@ -41,8 +43,9 @@ flappy.level1.state = function(game, store, env) {
 
     // initialize
     store.score = 0;
-    score = flappy.objects.score(game, scene.score);
-    bird = flappy.objects.bird(game, scene.bird);
+    pipes = game.add.group();
+    bird = new flappy.objects.Bird(game, 100, 245);
+    hud = new flappy.objects.Hud(game, store);
 
     // setup rules for mechanics
     var when = flappy.level1.gameplay(game, scene, env).when;
@@ -51,36 +54,23 @@ flappy.level1.state = function(game, store, env) {
       bottom: env.height
     };
     mechanics
-      .addRule(when(bird.sprite).hits(scene.pipes), restart)
-      .addRule(when(bird.sprite).isOutOfBounds(gameBounds), restart);
+      .addRule(when(bird).hitsAny(pipes), restart)
+      .addRule(when(bird).isOutOfBounds(gameBounds), restart)
+      .addRule(when(bird).clearsAny(pipes), scorePoint);
 
     // controls
     keyboardInput
-      .spaceKeyDown(bird.jump)
+      .spaceKeyDown(bird.jump, bird) 
       .escKeyDown(pause);
 
-    touchInput.tap(bird.jump);
+    touchInput.tap(bird.jump, bird);
 
-    // start
-    bird.fall();
-
-    
-    pipeSpawnTimer = game.time.events.loop(1500, function() {
-      scene.spawnRowOfPipes();
-      store.score += 1;
-    }, this);
+    pipeSpawnTimer = this.game.time.events.loop(Phaser.Timer.SECOND * 1.25, spawnRowOfPipes, this);
   }
 
   function update() {
     mechanics.enforce();
-
-    if (scene.bird.angle < 20) {
-      scene.bird.angle += 1;
-    }
-    
-    score.update(store.score);
   }
-
 
   function pause() {
     console.log('Game paused');
@@ -88,6 +78,21 @@ flappy.level1.state = function(game, store, env) {
 
   function restart() {
     game.state.start('level1State');
+  }
+
+  function scorePoint() {
+    store.score += 1;    
+  }
+
+  function spawnRowOfPipes() {
+    var pipeGroup = pipes.getFirstExists(false);
+    if(!pipeGroup) {
+        pipeGroup = new flappy.objects.PipeGroup(game, pipes);
+        pipeGroup.name = 'PipeGroup' + (parseInt(pipes.children.length, 10));
+    } 
+    else {
+      pipeGroup.reset(game.width + 10, 0);
+    }
   }
 
 
