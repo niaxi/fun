@@ -22,8 +22,6 @@ flappy.level1.state = function(game, store, env) {
     
     game.load.script('keyboardInput', 'src/inputs/keyboard.js');
     game.load.script('touchInput', 'src/inputs/touch.js');
-
-    game.load.script('level1Scene', 'src/level1/scene.js');
     
     game.load.script('Bird', 'src/objects/Bird.js');
     game.load.script('Hud', 'src/objects/Hud.js');
@@ -41,7 +39,6 @@ flappy.level1.state = function(game, store, env) {
     rules = flappy.mechanics.rulesEngine();
     keyboardInput = flappy.inputs.keyboard(game);
     touchInput = flappy.inputs.touch(game);
-    scene = flappy.level1.scene(game);
 
 
     // initialize
@@ -49,6 +46,12 @@ flappy.level1.state = function(game, store, env) {
     pipeSpore = pipeGenerator(game, Phaser.Timer.SECOND * 1.25);
     bird = new flappy.objects.Bird(game, 100, 245);
     hud = new flappy.objects.Hud(game, store);
+
+
+    // set the stage
+    game.stage.backgroundColor = '#71c5cf';
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+    game.physics.arcade.gravity.y = 1200;
 
     // setup gameplay
     var when = flappy.mechanics.conditions(game, scene, env).when;
@@ -74,6 +77,8 @@ flappy.level1.state = function(game, store, env) {
 
     touchInput.tap(bird.jump, bird);
 
+
+    // release the KRAPn!
     pipeSpore.start();
   }
 
