@@ -1,7 +1,7 @@
-namespace('flappy.engine');
+namespace('flappy.mechanics');
 
 
-flappy.engine.pipeGenerator = function(game, frequency) {
+flappy.mechanics.pipeGenerator = function(game, frequency) {
   // imports
   var PipeGroup = flappy.objects.PipeGroup;
 

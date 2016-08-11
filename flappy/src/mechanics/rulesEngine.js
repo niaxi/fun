@@ -1,14 +1,14 @@
-namespace('flappy.engine');
+namespace('flappy.mechanics');
 
 
-flappy.engine.mechanics = function() {
+flappy.mechanics.rulesEngine = function() {
   var rules = [];
   var fluentApi = {
-    addRule: addRule,
+    add: add,
     enforce: enforce
   };
 
-  function addRule(predicate, cb, args, ctx) {
+  function add(predicate, cb, args, ctx) {
     var ruleDef = {
       predicate: predicate,
       cb: cb,

@@ -11,7 +11,7 @@ flappy.level1.state = function(game, store, env) {
   var bird;
   var pipeSpore;
 
-  var mechanics;
+  var rules;
 
   var pipeSpawnTimer;
 
@@ -24,21 +24,21 @@ flappy.level1.state = function(game, store, env) {
     game.load.script('touchInput', 'src/inputs/touch.js');
 
     game.load.script('level1Scene', 'src/level1/scene.js');
-    game.load.script('level1Gameplay', 'src/level1/gameplay.js');
     
     game.load.script('Bird', 'src/objects/Bird.js');
     game.load.script('Hud', 'src/objects/Hud.js');
     game.load.script('Pipe', 'src/objects/Pipe.js');
     game.load.script('PipeGroup', 'src/objects/PipeGroup.js');
 
-    game.load.script('mechanics', 'src/engine/mechanics.js');
-    game.load.script('pipeGenerator', 'src/engine/pipeGenerator.js');
+    game.load.script('rulesEngine', 'src/mechanics/rulesEngine.js');
+    game.load.script('pipeGenerator', 'src/mechanics/pipeGenerator.js');
+    game.load.script('conditions', 'src/mechanics/conditions.js');
   }
 
   function create() {
     // imports
-    pipeGenerator = flappy.engine.pipeGenerator;
-    mechanics = flappy.engine.mechanics();
+    pipeGenerator = flappy.mechanics.pipeGenerator;
+    rules = flappy.mechanics.rulesEngine();
     keyboardInput = flappy.inputs.keyboard(game);
     touchInput = flappy.inputs.touch(game);
     scene = flappy.level1.scene(game);
@@ -50,19 +50,19 @@ flappy.level1.state = function(game, store, env) {
     bird = new flappy.objects.Bird(game, 100, 245);
     hud = new flappy.objects.Hud(game, store);
 
-    // setup rules for mechanics
-    var when = flappy.level1.gameplay(game, scene, env).when;
+    // setup gameplay
+    var when = flappy.mechanics.conditions(game, scene, env).when;
     var gameBounds = {
       top: 0,
       bottom: env.height
     };
 
-    mechanics
-      .addRule(when(bird).hitsAny(pipeSpore.pipes), restart)
-      .addRule(when(bird).isOutOfBounds(gameBounds), restart)
-      .addRule(when(bird).clearsAny(pipeSpore.pipes), scorePoint);
+    rules
+      .add(when(bird).hitsAny(pipeSpore.pipes), restart)
+      .add(when(bird).isOutOfBounds(gameBounds), restart)
+      .add(when(bird).clearsAny(pipeSpore.pipes), scorePoint);
 
-    // mechanics
+    // rules
     //   .when(playerHitsAPipe, restart)
     //   .when(playerIsOutOfBounds(gameBounds), restart)
     //   .when(playerClearsAPipeGroup, scorePoint);
@@ -78,7 +78,7 @@ flappy.level1.state = function(game, store, env) {
   }
 
   function update() {
-    mechanics.enforce();
+    rules.enforce();
   }
 
   function pause() {

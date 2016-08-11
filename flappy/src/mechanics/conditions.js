@@ -1,7 +1,7 @@
-namespace('flappy.level1');
+namespace('flappy.mechanics');
 
 
-flappy.level1.gameplay = function(game, scene, env) {
+flappy.mechanics.conditions = function(game, scene, env) {
 
   function when(subject) {
 
