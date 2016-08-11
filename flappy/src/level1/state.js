@@ -9,7 +9,7 @@ flappy.level1.state = function(game, store, env) {
   // objects
   var hud;
   var bird;
-  var pipes;
+  var pipeSpore;
 
   var mechanics;
 
@@ -31,6 +31,8 @@ flappy.level1.state = function(game, store, env) {
     game.load.script('Hud', 'src/objects/Hud.js');
     game.load.script('Pipe', 'src/objects/Pipe.js');
     game.load.script('PipeGroup', 'src/objects/PipeGroup.js');
+
+    game.load.script('pipeGenerator', 'src/engine/pipeGenerator.js');
   }
 
   function create() {
@@ -42,7 +44,7 @@ flappy.level1.state = function(game, store, env) {
 
     // initialize
     store.score = 0;
-    pipes = game.add.group();
+    pipeSpore = flappy.engine.pipeGenerator(game, Phaser.Timer.SECOND * 1.25);
     bird = new flappy.objects.Bird(game, 100, 245);
     hud = new flappy.objects.Hud(game, store);
 
@@ -52,10 +54,11 @@ flappy.level1.state = function(game, store, env) {
       top: 0,
       bottom: env.height
     };
+
     mechanics
-      .addRule(when(bird).hitsAny(pipes), restart)
+      .addRule(when(bird).hitsAny(pipeSpore.pipes), restart)
       .addRule(when(bird).isOutOfBounds(gameBounds), restart)
-      .addRule(when(bird).clearsAny(pipes), scorePoint);
+      .addRule(when(bird).clearsAny(pipeSpore.pipes), scorePoint);
 
     // mechanics
     //   .when(playerHitsAPipe, restart)
@@ -69,7 +72,7 @@ flappy.level1.state = function(game, store, env) {
 
     touchInput.tap(bird.jump, bird);
 
-    pipeSpawnTimer = this.game.time.events.loop(Phaser.Timer.SECOND * 1.25, spawnRowOfPipes, this);
+    pipeSpore.start();
   }
 
   function update() {
@@ -86,17 +89,6 @@ flappy.level1.state = function(game, store, env) {
 
   function scorePoint() {
     store.score += 1;    
-  }
-
-  function spawnRowOfPipes() {
-    var pipeGroup = pipes.getFirstExists(false);
-    if(!pipeGroup) {
-        pipeGroup = new flappy.objects.PipeGroup(game, pipes);
-        pipeGroup.name = 'PipeGroup' + (parseInt(pipes.children.length, 10));
-    } 
-    else {
-      pipeGroup.reset(game.width + 10, 0);
-    }
   }
 
 
