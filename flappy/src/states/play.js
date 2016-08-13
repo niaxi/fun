@@ -5,7 +5,8 @@ flappy.states.play = function(game, store, env) {
   var scene;
   var keyboardInput;
   var touchInput;
-
+  var gamepadInput;
+  
   // objects
   var hud;
   var bird;
@@ -39,6 +40,7 @@ flappy.states.play = function(game, store, env) {
     rules = flappy.mechanics.rulesEngine();
     keyboardInput = flappy.inputs.keyboard(game);
     touchInput = flappy.inputs.touch(game);
+    // gamepadInput = flappy.inputs.gamepad(game);
 
 
     // initialize
@@ -70,19 +72,25 @@ flappy.states.play = function(game, store, env) {
     //   .when(playerIsOutOfBounds(gameBounds), restart)
     //   .when(playerClearsAPipeGroup, scorePoint);
 
-    // controls
-    keyboardInput
-      .spaceKeyDown(bird.jump, bird) 
-      .escKeyDown(pause);
 
+    keyboardInput
+      .space(bird.jump, bird)
+      .esc(pause);
+    
     touchInput.tap(bird.jump, bird);
 
+    // gamepadInput
+    //   .pad1
+    //     .buttonADown('down')
+    //     .buttonBDown('down')
+    //     .buttonBUp()
 
     // release the KRAPn!
     pipeSpore.start();
   }
 
   function update() {
+    keyboardInput.process();
     rules.enforce();
   }
 
