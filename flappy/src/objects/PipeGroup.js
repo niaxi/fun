@@ -50,6 +50,10 @@ flappy.objects.PipeGroup = (function() {
     this.exists = true;
   };
   
+  PipeGroup.prototype.stop = function() {
+    this.setAll('body.velocity.x', 0);
+  };
+  
 
   // exports 
   return PipeGroup;

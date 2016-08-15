@@ -8,7 +8,8 @@ flappy.main = (function() {
   }
   var game = new Phaser.Game(env.width, env.height);
   var store = {
-    score: 0
+    score: 0,
+    paused: false
   };
 
 

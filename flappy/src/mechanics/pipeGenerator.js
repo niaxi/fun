@@ -30,13 +30,14 @@ flappy.mechanics.pipeGenerator = function(game, frequency) {
   function stop() {
     if (generator) {
       generator.timer.stop();
+      generator = null;
     }
+    pipes.callAll('stop');
   }
 
   function pause() {
     if (generator) {
       generator.timer.pause();
-      console.log('paused');
     }
   }
 

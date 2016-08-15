@@ -14,8 +14,6 @@ flappy.states.play = function(game, store, env) {
 
   var rules;
 
-  var pipeSpawnTimer;
-
   // life cycle
   function preload() {
     game.load.image('bird', 'assets/bird.png');
@@ -23,6 +21,7 @@ flappy.states.play = function(game, store, env) {
     
     game.load.script('keyboardInput', 'src/inputs/keyboard.js');
     game.load.script('touchInput', 'src/inputs/touch.js');
+    game.load.script('gamepadInput', 'src/inputs/gamepad.js');
     
     game.load.script('Bird', 'src/objects/Bird.js');
     game.load.script('Hud', 'src/objects/Hud.js');
@@ -40,7 +39,7 @@ flappy.states.play = function(game, store, env) {
     rules = flappy.mechanics.rulesEngine();
     keyboardInput = flappy.inputs.keyboard(game);
     touchInput = flappy.inputs.touch(game);
-    // gamepadInput = flappy.inputs.gamepad(game);
+    gamepadInput = flappy.inputs.gamepad(game);
 
 
     // initialize
@@ -53,7 +52,6 @@ flappy.states.play = function(game, store, env) {
     // set the stage
     game.stage.backgroundColor = '#71c5cf';
     game.physics.startSystem(Phaser.Physics.ARCADE);
-    game.physics.arcade.gravity.y = 1200;
 
     // setup gameplay
     var when = flappy.mechanics.conditions(game, scene, env).when;
@@ -74,44 +72,89 @@ flappy.states.play = function(game, store, env) {
 
 
     keyboardInput
-      .space(bird.jump, bird)
-      .esc(pause);
+      .space(birdJump)
+      .esc(togglePause);
     
-    touchInput.tap(bird.jump, bird);
+    touchInput.tap(birdJump);
 
-    // gamepadInput
-    //   .pad1
-    //     .buttonADown('down')
-    //     .buttonBDown('down')
-    //     .buttonBUp()
+    gamepadInput
+      .start()
+      .pad1().onConnect(function(pad) {
+        console.log('connected 1');
+        pad.a(birdJump)
+        pad.b(function() { console.log('B'); });
+      });
 
     // release the KRAPn!
+    game.physics.arcade.gravity.y = 1200;    
     pipeSpore.start();
   }
 
   function update() {
+    if (store.paused) {
+      return;
+    }
     keyboardInput.process();
     rules.enforce();
   }
 
   function pause() {
-    console.log('Game paused');
+    if (store.paused) {
+      return;
+    }
+    game.physics.arcade.isPaused = true;
+    pipeSpore.pause();
+    bird.disable();
+    store.paused = true;
+  }
+
+  function resume() {
+    if (!store.paused) {
+      return;
+    }
+    game.physics.arcade.isPaused = false;
+    pipeSpore.resume();
+    bird.enable();
+    store.paused = false;
   }
 
   function restart() {
-    game.state.start('play');
+    // game.state.start('play');
+    // bird.reset();
+    // store.score = 0;
+    // pipeSpore.stop();
+  }
+
+
+
+  // commands
+  function birdJump() {
+    if (store.paused) {
+      return;
+    }
+    bird.jump();
   }
 
   function scorePoint() {
     store.score += 1;    
   }
 
+  function togglePause(){
+    if (!store.paused) {
+      pause();
+    } else {
+      resume();
+    }
+  }
+
+  
 
   // exports
   return {
     preload: preload,
     create: create,
     update: update,
-    restart: restart
+    restart: restart,
+    resume: resume
   };
 };
