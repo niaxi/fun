@@ -81,7 +81,9 @@ flappy.states.play = function(game, store, env) {
       .start()
       .pad1().onConnect(function(pad) {
         console.log('connected 1');
-        pad.a(birdJump)
+        pad.a(birdJump);
+        pad.back(pause);
+        pad.start(resume);
         pad.b(function() { console.log('B'); });
       });
 
@@ -102,9 +104,7 @@ flappy.states.play = function(game, store, env) {
     if (store.paused) {
       return;
     }
-    game.physics.arcade.isPaused = true;
-    pipeSpore.pause();
-    bird.disable();
+    game.paused = true;
     store.paused = true;
   }
 
@@ -112,9 +112,7 @@ flappy.states.play = function(game, store, env) {
     if (!store.paused) {
       return;
     }
-    game.physics.arcade.isPaused = false;
-    pipeSpore.resume();
-    bird.enable();
+    game.paused = false;
     store.paused = false;
   }
 
