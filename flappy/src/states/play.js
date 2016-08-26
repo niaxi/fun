@@ -12,34 +12,50 @@ flappy.states.play = function(game, store, env) {
   var bird;
   var pipeSpore;
 
+  var pauseMenu;
+
+
+  var physics;
   var rules;
+  var when;
 
   // life cycle
   function preload() {
     game.load.image('bird', 'assets/bird.png');
     game.load.image('pipe', 'assets/pipe.png');
+    game.load.atlas('birdy', 'assets/bird/spritesheet.png', 'assets/bird/sprites.json');
     
     game.load.script('keyboardInput', 'src/inputs/keyboard.js');
     game.load.script('touchInput', 'src/inputs/touch.js');
     game.load.script('gamepadInput', 'src/inputs/gamepad.js');
     
+    game.load.script('textureMaker', 'src/factories/textureMaker.js');
+    
     game.load.script('Bird', 'src/objects/Bird.js');
     game.load.script('Hud', 'src/objects/Hud.js');
     game.load.script('Pipe', 'src/objects/Pipe.js');
     game.load.script('PipeGroup', 'src/objects/PipeGroup.js');
+    game.load.script('PauseMenu', 'src/objects/PauseMenu.js');
+    game.load.script('pipeGenerator', 'src/objects/pipeGenerator.js');
 
+    game.load.script('arcadePhysicsModel', 'src/mechanics/arcadePhysicsModel.js');
     game.load.script('rulesEngine', 'src/mechanics/rulesEngine.js');
-    game.load.script('pipeGenerator', 'src/mechanics/pipeGenerator.js');
     game.load.script('conditions', 'src/mechanics/conditions.js');
   }
 
   function create() {
     // imports
-    pipeGenerator = flappy.mechanics.pipeGenerator;
+    textureMaker = flappy.factories.textureMaker;
+    
+    physics = flappy.mechanics.arcadePhysicsModel(game);
     rules = flappy.mechanics.rulesEngine();
+    when = flappy.mechanics.conditions(game, scene, env).when;
+    
     keyboardInput = flappy.inputs.keyboard(game);
     touchInput = flappy.inputs.touch(game);
     gamepadInput = flappy.inputs.gamepad(game);
+
+    pipeGenerator = flappy.objects.pipeGenerator;
 
 
     // initialize
@@ -49,12 +65,22 @@ flappy.states.play = function(game, store, env) {
     hud = new flappy.objects.Hud(game, store);
 
 
+    graphics = textureMaker.quickBuilder(game);
+    var player2 = game.add.sprite(60, 80, graphics.draw('player2'));
+
+    // apply core physics model
+    physics.start();
+    physics.gravity(1200);
+    physics.enable([bird]);
+
+    // setTimeout(function() {
+    //   bird.enable();
+    //   physics.enable([bird]);
+    // }, 1000);
     // set the stage
     game.stage.backgroundColor = '#71c5cf';
-    game.physics.startSystem(Phaser.Physics.ARCADE);
 
     // setup gameplay
-    var when = flappy.mechanics.conditions(game, scene, env).when;
     var gameBounds = {
       top: 0,
       bottom: env.height
@@ -77,19 +103,16 @@ flappy.states.play = function(game, store, env) {
     
     touchInput.tap(birdJump);
 
-    gamepadInput
-      .start()
-      .pad1().onConnect(function(pad) {
+    gamepadInput.start();
+    gamepadInput.pad1().onConnect(function(pad) {
         console.log('connected 1');
         pad.a(birdJump);
         pad.back(pause);
-        pad.start(resume);
-        pad.b(function() { console.log('B'); });
+        pad.start(resume); // does not work with game.paused = true
       });
 
     // release the KRAPn!
-    game.physics.arcade.gravity.y = 1200;    
-    pipeSpore.start();
+    // pipeSpore.start();
   }
 
   function update() {
@@ -104,14 +127,19 @@ flappy.states.play = function(game, store, env) {
     if (store.paused) {
       return;
     }
+    
     game.paused = true;
     store.paused = true;
+    pauseMenu = new flappy.objects.PauseMenu(game, store, env);
+    pauseMenu.resumeButton.onInputUp.add(resume, this);
   }
 
   function resume() {
     if (!store.paused) {
       return;
     }
+    pauseMenu.destroy();
+    pauseMenu = null;
     game.paused = false;
     store.paused = false;
   }
@@ -152,6 +180,7 @@ flappy.states.play = function(game, store, env) {
     preload: preload,
     create: create,
     update: update,
+    // pauseUpdate: pauseUpdate,
     restart: restart,
     resume: resume
   };

@@ -5,7 +5,8 @@ flappy.inputs.keyboard = function(game) {
 
   var KEYS = game.input.keyboard.addKeys({
     'space': Phaser.Keyboard.SPACEBAR,
-    'esc': Phaser.Keyboard.ESC
+    'esc': Phaser.Keyboard.ESC,
+    'enter': Phaser.Keyboard.ENTER
   });
 
   var fluentApi = {};

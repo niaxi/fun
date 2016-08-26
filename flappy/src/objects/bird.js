@@ -8,9 +8,10 @@ flappy.objects.Bird = (function() {
     this.originalX = x;
     this.originalY = y;
     Phaser.Sprite.call(this, game, x, y, 'bird');
+    // this.scale.setTo(0.1,0.1); 
     this.anchor.setTo(-0.2, 0.5);
-    
-    this.game.physics.arcade.enable(this);
+    // this.animations.add('flying', Phaser.Animation.generateFrameNames('frame-', 1, 4), 5, true);
+    // this.animations.play('flying');
     this.game.add.existing(this);
   }
 
@@ -21,7 +22,7 @@ flappy.objects.Bird = (function() {
     if (!this.enabled) {
       return;
     }
-    if (this.angle < 20) {
+    if (this.body.velocity.y && this.angle < 20) {
       this.angle += 1;
     }
   }
