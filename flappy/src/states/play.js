@@ -1,7 +1,7 @@
 namespace('flappy.states');
 
 
-flappy.states.play = function(game, store, env) {
+flappy.states.play = function(game, store) {
   var scene;
   var keyboardInput;
   var touchInput;
@@ -20,36 +20,14 @@ flappy.states.play = function(game, store, env) {
   var when;
 
   // life cycle
-  function preload() {
-    game.load.image('bird', 'assets/bird.png');
-    game.load.image('pipe', 'assets/pipe.png');
-    game.load.atlas('birdy', 'assets/bird/spritesheet.png', 'assets/bird/sprites.json');
-    
-    game.load.script('keyboardInput', 'src/inputs/keyboard.js');
-    game.load.script('touchInput', 'src/inputs/touch.js');
-    game.load.script('gamepadInput', 'src/inputs/gamepad.js');
-    
-    game.load.script('textureMaker', 'src/factories/textureMaker.js');
-    
-    game.load.script('Bird', 'src/objects/Bird.js');
-    game.load.script('Hud', 'src/objects/Hud.js');
-    game.load.script('Pipe', 'src/objects/Pipe.js');
-    game.load.script('PipeGroup', 'src/objects/PipeGroup.js');
-    game.load.script('PauseMenu', 'src/objects/PauseMenu.js');
-    game.load.script('pipeGenerator', 'src/objects/pipeGenerator.js');
-
-    game.load.script('arcadePhysicsModel', 'src/mechanics/arcadePhysicsModel.js');
-    game.load.script('rulesEngine', 'src/mechanics/rulesEngine.js');
-    game.load.script('conditions', 'src/mechanics/conditions.js');
-  }
 
   function create() {
     // imports
-    textureMaker = flappy.factories.textureMaker;
+    graphicsBuilderFactory = flappy.graphics.graphicsBuilderFactory;
     
     physics = flappy.mechanics.arcadePhysicsModel(game);
     rules = flappy.mechanics.rulesEngine();
-    when = flappy.mechanics.conditions(game, scene, env).when;
+    when = flappy.mechanics.conditions(game, scene, store.env).when;
     
     keyboardInput = flappy.inputs.keyboard(game);
     touchInput = flappy.inputs.touch(game);
@@ -65,8 +43,8 @@ flappy.states.play = function(game, store, env) {
     hud = new flappy.objects.Hud(game, store);
 
 
-    graphics = textureMaker.quickBuilder(game);
-    var player2 = game.add.sprite(60, 80, graphics.draw('player2'));
+    gfx = graphicsBuilderFactory(game);
+    var player2 = game.add.sprite(60, 80, gfx.draw('player2'));
 
     // apply core physics model
     physics.start();
@@ -83,7 +61,7 @@ flappy.states.play = function(game, store, env) {
     // setup gameplay
     var gameBounds = {
       top: 0,
-      bottom: env.height
+      bottom: store.env.height
     };
 
     rules
@@ -130,7 +108,7 @@ flappy.states.play = function(game, store, env) {
     
     game.paused = true;
     store.paused = true;
-    pauseMenu = new flappy.objects.PauseMenu(game, store, env);
+    pauseMenu = new flappy.objects.PauseMenu(game, store);
     pauseMenu.resumeButton.onInputUp.add(resume, this);
   }
 
@@ -177,7 +155,6 @@ flappy.states.play = function(game, store, env) {
 
   // exports
   return {
-    preload: preload,
     create: create,
     update: update,
     // pauseUpdate: pauseUpdate,

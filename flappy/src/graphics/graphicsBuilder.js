@@ -1,7 +1,7 @@
-namespace('flappy.factories');
+namespace('flappy.graphics');
 
 
-flappy.factories.textureMaker = (function() {
+flappy.graphics.graphicsBuilder = (function() {
 
   function graphicsBuilder(game, graphics) {
 
@@ -70,30 +70,8 @@ flappy.factories.textureMaker = (function() {
       }
     };
   }
-
-
-  function quickBuilder(game) {
-    var graphics = new Phaser.Graphics(game, 0, 0);
-    return graphicsBuilder(game, graphics);
-  }
-
-
-  function makeSquare() {
-    var graphics = new Phaser.Graphics(game, 0, 0);
-    graphics.boundsPadding = 0;
-    graphics.lineStyle(3, 0x000000);
-    graphics.beginFill(0xD2BE27, 1);
-    // graphics.drawCircle(0, 0, 80);
-    graphics.drawRect(60, 70, 47, 47);
-    var sprite = game.add.sprite(60, 80, graphics.generateTexture());
-    // game.physics.arcade.enable(sprite);
-    graphics.destroy();
-  }
   
 
   // exports 
-  return {
-    graphicsBuilder: graphicsBuilder,
-    quickBuilder: quickBuilder
-  };
+  return graphicsBuilder;
 })();

@@ -2,25 +2,28 @@ namespace('flappy');
 
 
 flappy.main = (function() {
-  var env = {
-    width: 400,
-    height: 490
-  }
-  var game = new Phaser.Game(env.width, env.height);
   var store = {
     score: 0,
-    paused: false
+    paused: false,
+    env: {
+      width: 400,
+      height: 490
+    }
   };
-
+  var game = new Phaser.Game(store.env.width, store.env.height);
 
   // life cycle 
   function preload() {
-    game.load.script('play',   'src/states/play.js');
+    game.load.script('graphicsBuilder', 'src/graphics/graphicsBuilder.js');
+    game.load.script('graphicsBuilderFactory', 'src/graphics/graphicsBuilderFactory.js');
+    game.load.script('rectFactory', 'src/graphics/rectFactory.js');
+
+    game.load.script('splash',   'src/states/splash.js');
   }
 
   function create() {
-    game.state.add('play', flappy.states.play(game, store, env));
-    game.state.start('play');
+    game.state.add('splash', flappy.states.splash(game, store));
+    game.state.start('splash');
   }
 
 
