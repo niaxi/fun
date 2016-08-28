@@ -12,7 +12,14 @@ flappy.main = (function() {
   };
   var game = new Phaser.Game(store.env.width, store.env.height);
 
-  // life cycle 
+  // life cycle   
+  function init() {
+    game.stage.backgroundColor = '#71c5cf';
+    this.titleText =  game.add.text(45, 120, "Flappy Blocks",
+      { font: '50px Arial', fill: '#ffffff' });
+    this.titleText.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
+  }
+
   function preload() {
     game.load.script('graphicsBuilder', 'src/graphics/graphicsBuilder.js');
     game.load.script('graphicsBuilderFactory', 'src/graphics/graphicsBuilderFactory.js');
@@ -29,6 +36,7 @@ flappy.main = (function() {
 
   // setup
   game.state.add('main', {
+    init: init,
     preload: preload,
     create: create
   });

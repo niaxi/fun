@@ -51,10 +51,6 @@ flappy.states.play = function(game, store) {
     physics.gravity(1200);
     physics.enable([bird]);
 
-    // setTimeout(function() {
-    //   bird.enable();
-    //   physics.enable([bird]);
-    // }, 1000);
     // set the stage
     game.stage.backgroundColor = '#71c5cf';
 
@@ -90,7 +86,7 @@ flappy.states.play = function(game, store) {
       });
 
     // release the KRAPn!
-    // pipeSpore.start();
+    pipeSpore.start();
   }
 
   function update() {
@@ -123,10 +119,10 @@ flappy.states.play = function(game, store) {
   }
 
   function restart() {
-    // game.state.start('play');
-    // bird.reset();
-    // store.score = 0;
-    // pipeSpore.stop();
+    game.state.start('play');
+    bird.reset();
+    store.score = 0;
+    pipeSpore.stop();
   }
 
 

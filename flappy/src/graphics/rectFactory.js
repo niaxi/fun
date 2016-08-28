@@ -6,19 +6,35 @@ flappy.graphics.rectFactory = (function() {
   var graphicsBuilderFactory = flappy.graphics.graphicsBuilderFactory;
 
 
-  function makeRoundedRectTexture(gfx, opts) {
-    var x = opts && opts.x || 0;
-    var y = opts && opts.y || 0;
-    var width = opts && opts.width || 120;
-    var height = opts && opts.height || 40;
-    var radius = opts && opts.radius || 10;
+  var textureDefaults = {
+    x: 0,
+    y: 0,
+    width: 120,
+    height: 40,
+    radius: 10,
+    line: {
+      width: 1,
+      color: 0xFFB3A,
+      alpha: 1
+    },
+    fill: {
+      color: 0x1B4067,
+      alpha: 1
+    },
+    padding: 0
+  }
+
+  function makeRoundedRectTexture(gfx, options) {
+    var opts = Object.assign({}, textureDefaults, options);
+    var line = opts.line;
+    var fill = opts.fill;
 
     return gfx
       .clear() 
-      .padding(0)
-      .lineStyle(1, 0xFFB3A)
-      .fill(0x1B4067, 1)
-      .rrect(x, y, width, height, radius)
+      .padding(opts.padding)
+      .lineStyle(line.width, line.color, line.alpha)
+      .fill(fill.color, fill.alpha)
+      .rrect(opts.x, opts.y, opts.width, opts.height, opts.radius)
       .toTexture();
   }
 

@@ -11,11 +11,17 @@ flappy.states.splash = function(game, store) {
 
   // life cycle
   function init() {
+    game.stage.backgroundColor = '#71c5cf';
+    this.titleText =  game.add.text(45, 120, "Flappy Blocks",
+      { font: '50px Arial', fill: '#ffffff' });
+    this.titleText.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
+
     rectFactory = flappy.graphics.rectFactory;
     this.progressBar = rectFactory.make(game, 60, 280, {width: 280, height:20});
   }
 
   function preload() {
+
     game.add.existing(this.progressBar);
     this.load.setPreloadSprite(this.progressBar);
 
@@ -44,21 +50,21 @@ flappy.states.splash = function(game, store) {
 
     game.load.script('menu',   'src/states/menu.js');
     game.load.script('play',   'src/states/play.js');
+    game.load.script('options',   'src/states/options.js');
+    game.load.script('credits',   'src/states/credits.js');
   }
 
   function create() {
-    this.titleText =  game.add.text(45, 120, "Flappy Blocks",
-      { font: '50px Arial', fill: '#ffffff' });
-    this.titleText.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
 
     // initialize
     touchInput = flappy.inputs.touch(game);
-    game.stage.backgroundColor = '#71c5cf';
 
 
     // add next states
     game.state.add('menu', flappy.states.menu(game, store));
     game.state.add('play', flappy.states.play(game, store));
+    game.state.add('options', flappy.states.options(game, store));
+    game.state.add('credits', flappy.states.credits(game, store));
 
 
     // load next state

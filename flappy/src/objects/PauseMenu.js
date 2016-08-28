@@ -27,10 +27,6 @@ flappy.objects.PauseMenu = (function() {
     this.add(this.pauseText);
   }
 
-  function cb() {
-    console.log('resume');
-  }
-
   PauseMenu.prototype = Object.create(Phaser.Group.prototype);
   PauseMenu.prototype.constructor = PauseMenu;
 
