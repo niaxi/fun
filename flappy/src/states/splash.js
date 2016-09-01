@@ -42,6 +42,7 @@ flappy.states.splash = function(game, store) {
     game.load.script('Pipe', 'src/objects/Pipe.js');
     game.load.script('PipeGroup', 'src/objects/PipeGroup.js');
     game.load.script('PauseMenu', 'src/objects/PauseMenu.js');
+    game.load.script('GameOverMenu', 'src/objects/GameOverMenu.js');
     game.load.script('pipeGenerator', 'src/objects/pipeGenerator.js');
 
     game.load.script('arcadePhysicsModel', 'src/mechanics/arcadePhysicsModel.js');

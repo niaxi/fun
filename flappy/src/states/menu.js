@@ -14,7 +14,7 @@ flappy.states.menu = function(game, store, env) {
       { font: '50px Arial', fill: '#ffffff' });
     this.titleText.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
     this.startButton = buttonFactory.add(game, 180, 280, "▶  Start");
-    this.optionsButton = buttonFactory.add(game, 180, 340, "⚙  Options");
+    this.optionsButton = buttonFactory.add(game, 180, 340, "✎  Options");
     this.creditsButton = buttonFactory.add(game, 180, 400, "☷  Credits");
 
     // initialize

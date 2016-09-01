@@ -22,9 +22,9 @@ flappy.objects.PauseMenu = (function() {
     this.quitButton = buttonFactory.add(game, 200, 340, "×  Quit");
     this.add(this.quitButton);
 
-    this.pauseText =  game.add.text(80, 120, "Paused",
+    this.titleText =  game.add.text(80, 120, "Paused",
       { font: '70px Arial', fill: '#ffffff' });
-    this.add(this.pauseText);
+    this.add(this.titleText);
   }
 
   PauseMenu.prototype = Object.create(Phaser.Group.prototype);

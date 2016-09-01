@@ -30,6 +30,7 @@ flappy.objects.pipeGenerator = function(game, frequency) {
   function stop() {
     if (generator) {
       generator.timer.stop();
+      generator.timer = null;
       generator = null;
     }
     pipes.callAll('stop');

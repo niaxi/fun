@@ -61,8 +61,8 @@ flappy.states.play = function(game, store) {
     };
 
     rules
-      .add(when(bird).hitsAny(pipeSpore.pipes), restart)
-      .add(when(bird).isOutOfBounds(gameBounds), restart)
+      .add(when(bird).hitsAny(pipeSpore.pipes), gameOver)
+      .add(when(bird).isOutOfBounds(gameBounds), gameOver)
       .add(when(bird).clearsAny(pipeSpore.pipes), scorePoint);
 
     // rules
@@ -102,8 +102,9 @@ flappy.states.play = function(game, store) {
       return;
     }
     
-    game.paused = true;
+    // game.paused = true;
     store.paused = true;
+    pipeSpore.stop();
     pauseMenu = new flappy.objects.PauseMenu(game, store);
     pauseMenu.resumeButton.onInputUp.add(resume, this);
   }
@@ -120,11 +121,22 @@ flappy.states.play = function(game, store) {
 
   function restart() {
     game.state.start('play');
-    bird.reset();
-    store.score = 0;
-    pipeSpore.stop();
+    // bird.reset();
+    // store.score = 0;
+    // pipeSpore.stop();
   }
 
+  function quit() {
+    game.state.start('menu');
+  }
+
+  function gameOver() {
+    gameOverMenu = new flappy.objects.GameOverMenu(game, store);
+    // store.paused = false;
+    pipeSpore.stop();
+    gameOverMenu.playAgainButton.onInputUp.add(restart, this);
+    gameOverMenu.quitButton.onInputUp.add(quit, this);
+  }
 
 
   // commands
