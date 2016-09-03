@@ -10,7 +10,7 @@ flappy.objects.pipeGenerator = function(game, frequency) {
   var generator;
 
   function spawnRowOfPipes() {
-    var pipeGroup = pipes.getFirstExists(false);
+    var pipeGroup = null; //pipes.getFirstExists(false);
     if(!pipeGroup) {
         pipeGroup = new PipeGroup(game, pipes);
         pipeGroup.name = 'PipeGroup' + (parseInt(pipes.children.length, 10));

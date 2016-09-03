@@ -17,12 +17,26 @@ flappy.states.splash = function(game, store) {
     this.titleText.setShadow(3, 3, 'rgba(0,0,0,0.5)', 5);
 
     rectFactory = flappy.graphics.rectFactory;
+    var unfilledBarStyle = {
+      width: 280, 
+      height: 20,
+      line: {
+        color: 0xAAAAAA
+      },
+      fill: {
+        color: 0xCCCCCC
+      }
+    };
+    this.progressBarUnfilled = rectFactory.add(game, 60, 280, unfilledBarStyle);
     this.progressBar = rectFactory.make(game, 60, 280, {width: 280, height:20});
+    this.loadingText =  game.make.text(170, 282, "Loading...",
+      { font: '12px Arial', fill: '#ffffff' });
   }
 
   function preload() {
 
     game.add.existing(this.progressBar);
+    game.add.existing(this.loadingText);
     this.load.setPreloadSprite(this.progressBar);
 
     game.load.image('bird', 'assets/bird.png');
